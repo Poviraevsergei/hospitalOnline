@@ -2,34 +2,27 @@ package com.tms.service;
 
 import com.tms.domain.User;
 import com.tms.exception.UserNotFoundException;
+import com.tms.mappers.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 
 @Service
 public class UserService {
 
+    JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public UserService(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     public User getUserById(int id) throws UserNotFoundException {
-        User user = new User();
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/hospital", "postgres", "root");
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id=?");
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            resultSet.next();
-            user.setId(resultSet.getInt("id"));
-            user.setFirstName(resultSet.getString("first_name"));
-            user.setLastName(resultSet.getString("last_name"));
-            user.setAge(resultSet.getInt("age"));
-            user.setLogin(resultSet.getString("user_login"));
-            user.setPassword(resultSet.getString("user_password"));
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("something wrong....");
-        }
+        User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE id=?", new UserMapper(), new Object[]{id});
         if (user.getId() == 0) {
             throw new UserNotFoundException(id);
         }
@@ -37,79 +30,21 @@ public class UserService {
     }
 
     public ArrayList<User> getAllUsers() {
-        ArrayList<User> userList = new ArrayList<>();
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/hospital", "postgres", "root");
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM users");
-            ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                User user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setAge(resultSet.getInt("age"));
-                user.setLogin(resultSet.getString("user_login"));
-                user.setPassword(resultSet.getString("user_password"));
-                userList.add(user);
-            }
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("something wrong....");
-        }
-        return userList;
+        return (ArrayList<User>) jdbcTemplate.query("SELECT * FROM users",new UserMapper());
     }
 
 
     public int createUser(User user) {
-        int result = 0;
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/hospital", "postgres", "root");
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO users (id, first_name, last_name, age, user_login, user_password) VALUES (DEFAULT, ?, ?, ?, ?, ?)");
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setInt(3, user.getAge());
-            statement.setString(4, user.getLogin());
-            statement.setString(5, user.getPassword());
-            result = statement.executeUpdate();
-
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("something wrong....");
-        }
-        return result;
+        return jdbcTemplate.update("INSERT INTO users (id, first_name, last_name, age, user_login, user_password) VALUES (DEFAULT, ?, ?, ?, ?, ?)",
+                new Object[]{user.getFirstName(),user.getLastName(),user.getAge(),user.getLogin(),user.getPassword()});
     }
 
     public int updateUserById(int id, String firstName, String lastName, int age, String login, String password) {
-        int result = 0;
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/hospital", "postgres", "root");
-            PreparedStatement statement = connection.prepareStatement("UPDATE users SET first_name=?, last_name=?, age=?, user_login=?, user_password=? WHERE id=?");
-            statement.setString(1, firstName);
-            statement.setString(2, lastName);
-            statement.setInt(3, age);
-            statement.setString(4, login);
-            statement.setString(5, password);
-            statement.setInt(6, id);
-            result = statement.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("something wrong....");
-        }
-        return result;
+        return jdbcTemplate.update("UPDATE users SET first_name=?, last_name=?, age=?, user_login=?, user_password=? WHERE id=?",
+                new Object[]{firstName,lastName,age,login,password,id});
     }
 
     public int deleteUserById(int id) {
-        int result = 0;
-        try {
-            Class.forName("org.postgresql.Driver");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/hospital", "postgres", "root");
-            PreparedStatement statement = connection.prepareStatement("DELETE FROM users WHERE id=?");
-            statement.setInt(1, id);
-            result = statement.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("something wrong....");
-        }
-        return result;
+       return jdbcTemplate.update("DELETE FROM users WHERE id=?", new Object[]{id});
     }
 }

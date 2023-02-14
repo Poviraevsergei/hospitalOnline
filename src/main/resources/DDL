@@ -1,0 +1,33 @@
+create table if not exists users
+(
+	id bigserial not null
+		constraint user_pk
+			primary key,
+	first_name varchar,
+	last_name varchar,
+	age integer,
+	user_login varchar,
+	user_password varchar
+);
+
+alter table users owner to postgres;
+
+create table if not exists consultation
+(
+	id bigserial not null
+		constraint consultation_pk
+			primary key,
+	time timestamp,
+	doctor_id integer not null
+		constraint consultation_users_id_fk
+			references users
+				on update cascade on delete cascade,
+	patient_id integer not null
+		constraint consultation_users_id_fk_2
+			references users
+				on update cascade on delete cascade,
+	description varchar
+);
+
+alter table consultation owner to postgres;
+

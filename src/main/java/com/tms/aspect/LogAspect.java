@@ -15,24 +15,24 @@ public class LogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Before("within(com.tms.service.DoctorService)")
+    @Before("within(com.tms.service.UserService)")
     public void logBeforeMethod(JoinPoint joinPoint) {
-        log.info("THIS LOG BEFORE METHOD!" + joinPoint.getSignature());
+        log.info("Start doing method " + joinPoint.getSignature());
     }
 
-    @After("within(com.tms.service.DoctorService)")
+    @After("within(com.tms.service.UserService)")
     public void logAfterMethod(JoinPoint joinPoint) {
-        log.info("THIS LOG AFTER METHOD!" );
+        log.info("Finish doing method ");
     }
 
-    @AfterReturning("within(com.tms.service.DoctorService)")
+    @AfterReturning("within(com.tms.service.UserService)")
     public void logAfterReturningMethod() {
-        log.info("THIS LOG AFTER RETURNING METHOD!");
+
     }
 
-    @AfterThrowing("within(com.tms.service.DoctorService)")
-    public void logAfterThrowingMethod() {
-        log.info("THIS LOG AFTER Throwing METHOD!");
+    @AfterThrowing(throwing = "error", value = "within(com.tms.service.UserService)")
+    public void logAfterThrowingMethod(Throwable error) {
+        log.info("We have error: " + error);
     }
 
     @Around("@annotation(com.tms.annotations.CheckTimeAnnotation)")
