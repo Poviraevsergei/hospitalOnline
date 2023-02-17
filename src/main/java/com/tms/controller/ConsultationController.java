@@ -1,7 +1,7 @@
 package com.tms.controller;
 
-import com.tms.domain.User;
-import com.tms.service.UserService;
+import com.tms.domain.Consultation;
+import com.tms.service.ConsultationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,55 +16,55 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+@RequestMapping(value = "/consultation", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ConsultationController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    private final UserService userService;
+    private final ConsultationService consultationService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public ConsultationController(ConsultationService consultationService) {
+        this.consultationService = consultationService;
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+    public ResponseEntity<Consultation> getComponentById(@PathVariable int id) {
+        Consultation consultation = consultationService.getConsultationById(id);
+        return new ResponseEntity<>(consultation, consultation.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<ArrayList<Consultation>> getAllConsultations() {
+        return new ResponseEntity<>(consultationService.getAllConsultations(), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> createConsultation(@RequestBody @Valid Consultation consultation, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = userService.createUser(user);
+        int countChangedRows = consultationService.createConsultation(consultation);
         return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
     }
 
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUserById(@RequestBody @Valid User user, BindingResult bindingResult ) {
+    public ResponseEntity<HttpStatus> updateComponentById(@RequestBody @Valid Consultation consultation, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = userService.updateUserById(user);
+        int countChangedRows = consultationService.updateConsultationById(consultation);
         return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
 
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
-        return new ResponseEntity<>(userService.deleteUserById(id) > 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(consultationService.deleteComponentById(id) > 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
     }
 }
