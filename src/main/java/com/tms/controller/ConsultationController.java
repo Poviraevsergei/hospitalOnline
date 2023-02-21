@@ -2,6 +2,7 @@ package com.tms.controller;
 
 import com.tms.domain.Consultation;
 import com.tms.service.ConsultationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class ConsultationController {
     }
 
     @GetMapping("/{id}")
+    @Tag(name = "byID")
     public ResponseEntity<Consultation> getComponentById(@PathVariable int id) {
         Consultation consultation = consultationService.getConsultationById(id);
         return new ResponseEntity<>(consultation, consultation.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
@@ -39,6 +42,7 @@ public class ConsultationController {
     }
 
     @PostMapping
+    @ApiIgnore(value = "Просто так")
     public ResponseEntity<HttpStatus> createConsultation(@RequestBody @Valid Consultation consultation, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {

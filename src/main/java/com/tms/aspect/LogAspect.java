@@ -15,19 +15,19 @@ public class LogAspect {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Before("within(com.tms.service.UserService)")
+    @Before("within(com.tms.*)")
     public void logBeforeMethod(JoinPoint joinPoint) {
         log.info("Start doing method " + joinPoint.getSignature());
     }
 
     @After("within(com.tms.service.UserService)")
     public void logAfterMethod(JoinPoint joinPoint) {
-        log.info("Finish doing method ");
+        log.info("Finish doing method " + joinPoint.getSignature());
     }
 
     @AfterReturning("within(com.tms.service.UserService)")
-    public void logAfterReturningMethod() {
-
+    public void logAfterReturningMethod(JoinPoint joinPoint) {
+        log.info("Log after returning " + joinPoint.getSignature());
     }
 
     @AfterThrowing(throwing = "error", value = "within(com.tms.service.UserService)")

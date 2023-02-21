@@ -2,6 +2,11 @@ package com.tms.controller;
 
 import com.tms.domain.User;
 import com.tms.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +30,6 @@ public class UserController {
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
     @GetMapping
@@ -66,5 +65,19 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
         return new ResponseEntity<>(userService.deleteUserById(id) > 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+    }
+
+    @Operation(description = "Ищет пользователя в бд по id", summary = "Ишем пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Всё ок, Юзер найден!"),
+            @ApiResponse(responseCode = "409", description = "Мы не нашли, всё плохо :(")
+    })
+    @GetMapping("/{id}")
+    @Tag(name = "byID", description = "ищём по id")
+    public ResponseEntity<User> getUserById(
+            @Parameter(description = "Это id пользователя") @PathVariable int id,
+            @Parameter(description = "А это для массовки", required = true) String name) {
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 }
