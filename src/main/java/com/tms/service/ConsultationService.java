@@ -3,6 +3,7 @@ package com.tms.service;
 import com.tms.domain.Consultation;
 import com.tms.domain.User;
 import com.tms.mappers.UserMapper;
+import com.tms.repository.ConsultationRepository;
 import org.aspectj.weaver.ArrayAnnotationValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,35 +16,30 @@ import java.util.ArrayList;
 @Service
 public class ConsultationService {
 
-    JdbcTemplate jdbcTemplate;
+    public ConsultationRepository consultationRepository;
 
     @Autowired
-    public ConsultationService(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public ConsultationService(ConsultationRepository consultationRepository) {
+        this.consultationRepository = consultationRepository;
     }
 
     public Consultation getConsultationById(int id) {
-        //TODO:ConsultationService
-      return new Consultation();
+        return consultationRepository.getConsultationById(id);
     }
 
     public ArrayList<Consultation> getAllConsultations() {
-        //TODO:ConsultationService
-        return new ArrayList<>();
+        return consultationRepository.getAllConsultations();
     }
 
-    public int createConsultation(Consultation consultation) {
-        //TODO:ConsultationService
-        return 1;
+    public void createConsultation(Consultation consultation) {
+        consultationRepository.createConsultation(consultation);
     }
 
-    public int updateConsultationById(Consultation consultation) {
-        //TODO:ConsultationService
-        return 1;
+    public void updateConsultationById(Consultation consultation) {
+        consultationRepository.updateConsultation(consultation);
     }
 
-    public int deleteComponentById(int id) {
-        //TODO:ConsultationService
-        return 1;
+    public void deleteConsultation(Consultation consultation) {
+        consultationRepository.deleteConsultation(consultation);
     }
 }

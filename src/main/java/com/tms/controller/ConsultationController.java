@@ -31,7 +31,7 @@ public class ConsultationController {
 
     @GetMapping("/{id}")
     @Tag(name = "byID")
-    public ResponseEntity<Consultation> getComponentById(@PathVariable int id) {
+    public ResponseEntity<Consultation> getConsultationById(@PathVariable int id) {
         Consultation consultation = consultationService.getConsultationById(id);
         return new ResponseEntity<>(consultation, consultation.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
@@ -50,8 +50,8 @@ public class ConsultationController {
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = consultationService.createConsultation(consultation);
-        return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+        consultationService.createConsultation(consultation);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
@@ -62,13 +62,14 @@ public class ConsultationController {
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = consultationService.updateConsultationById(consultation);
-        return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+        consultationService.updateConsultationById(consultation);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
-        return new ResponseEntity<>(consultationService.deleteComponentById(id) > 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+    @DeleteMapping
+    public ResponseEntity<HttpStatus> delete(@RequestBody @Valid Consultation consultation) {
+        consultationService.deleteConsultation(consultation);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
