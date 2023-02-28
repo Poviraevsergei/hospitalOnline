@@ -15,7 +15,7 @@ public class ConsultationRepository {
     public SessionFactory sessionFactory;
 
     public ConsultationRepository() {
-        sessionFactory = new Configuration().configure().buildSessionFactory();
+        sessionFactory = new Configuration().configure().addAnnotatedClass(Consultation.class).buildSessionFactory();
     }
 
     public ArrayList<Consultation> getAllConsultations(){

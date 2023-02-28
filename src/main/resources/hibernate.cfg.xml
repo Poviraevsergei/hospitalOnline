@@ -15,6 +15,9 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <mapping class="com.tms.domain.Consultation"/>
+        <mapping class="com.tms.domain.CustomerExample"/>
+        <mapping class="com.tms.domain.UserExample"/>
+        <mapping class="com.tms.domain.TelephoneExample"/>
+        <mapping class="com.tms.domain.ProductExample"/>
     </session-factory>
 </hibernate-configuration>
