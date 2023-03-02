@@ -1,17 +1,17 @@
 package com.tms.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@Entity
 @Data
+@ToString(exclude = {"customers"})
+@EqualsAndHashCode(exclude = {"customers"})
+@Entity
 @Table(name = "product_example")
 public class ProductExample {
     @Id
@@ -22,6 +22,7 @@ public class ProductExample {
     @Column(name = "product_info")
     private String productInfo;
 
-    @ManyToMany(mappedBy = "productsExample")
-    List<CustomerExample> customers;
+    @JsonBackReference
+    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
+    Set<CustomerExample> customers;
 }

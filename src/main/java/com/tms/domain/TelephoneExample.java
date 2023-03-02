@@ -2,12 +2,15 @@ package com.tms.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import org.hibernate.property.access.internal.PropertyAccessStrategyIndexBackRefImpl;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-@Entity
 @Data
+@ToString(exclude = {"userExample"})
+@EqualsAndHashCode(exclude = {"userExample"})
+@Entity
 @Table(name = "telephone_example")
 public class TelephoneExample {
     @Id
@@ -21,6 +24,5 @@ public class TelephoneExample {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
-    private UserExample usersExamples;
-
+    private UserExample userExample;
 }

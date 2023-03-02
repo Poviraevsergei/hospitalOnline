@@ -1,20 +1,18 @@
 package com.tms.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@Entity
 @Data
+@ToString(exclude = {"products", "userExample"})
+@EqualsAndHashCode(exclude = {"products", "userExample"})
+@Entity
 @Table(name = "customer_example")
 public class CustomerExample {
     @Id
@@ -29,11 +27,12 @@ public class CustomerExample {
     @OneToOne(mappedBy = "customer")
     private UserExample userExample;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "l_product_customer",
-            joinColumns = @JoinColumn(name = "customer_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
+            joinColumns = { @JoinColumn(name = "customer_id") },
+            inverseJoinColumns = { @JoinColumn(name = "product_id") }
     )
-    List<ProductExample> productsExample;
+    Set<ProductExample> products;
 }

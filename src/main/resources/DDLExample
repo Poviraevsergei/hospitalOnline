@@ -1,0 +1,67 @@
+create table customer_example
+(
+	id bigserial not null
+		constraint customer_example_pk
+			primary key,
+	customer_name varchar
+);
+
+alter table customer_example owner to postgres;
+
+create table user_example
+(
+	id bigserial not null
+		constraint user_example_pk
+			primary key,
+	username varchar,
+	customer_id integer
+		constraint user_example_customer_example_id_fk
+			references customer_example
+				on update cascade on delete cascade
+);
+
+alter table user_example owner to postgres;
+
+create table telephone_example
+(
+	id bigserial not null
+		constraint telephone_example_pk
+			primary key,
+	number varchar,
+	user_id integer not null
+		constraint telephone_example_user_example_id_fk
+			references user_example
+);
+
+alter table telephone_example owner to postgres;
+
+create unique index user_example_customer_id_uindex
+	on user_example (customer_id);
+
+create table product_example
+(
+	id bigserial not null
+		constraint product_example_pk
+			primary key,
+	product_info varchar
+);
+
+alter table product_example owner to postgres;
+
+create table l_product_customer
+(
+	id bigserial not null
+		constraint l_product_customer_pk
+			primary key,
+	customer_id integer not null
+		constraint l_product_customer_customer_example_id_fk
+			references customer_example
+				on update cascade on delete cascade,
+	product_id integer not null
+		constraint l_product_customer_product_example_id_fk
+			references product_example
+				on update cascade on delete cascade
+);
+
+alter table l_product_customer owner to postgres;
+
