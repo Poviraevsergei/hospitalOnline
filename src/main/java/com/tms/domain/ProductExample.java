@@ -1,6 +1,5 @@
 package com.tms.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,7 +21,6 @@ public class ProductExample {
     @Column(name = "product_info")
     private String productInfo;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
     Set<CustomerExample> customers;
 }

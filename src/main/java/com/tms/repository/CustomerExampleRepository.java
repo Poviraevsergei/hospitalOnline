@@ -1,6 +1,8 @@
 package com.tms.repository;
 
 import com.tms.domain.CustomerExample;
+import com.tms.domain.CustomerExampleDto;
+import com.tms.mappers.HibernateDtoMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -18,22 +20,26 @@ public class CustomerExampleRepository {
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public ArrayList<CustomerExample> getAllCustomerEx(){
+    public ArrayList<CustomerExampleDto> getAllCustomerEx() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Query query = session.createQuery("from CustomerExample ");
         ArrayList<CustomerExample> list = (ArrayList<CustomerExample>) query.getResultList();
+        ArrayList<CustomerExampleDto> resultList = new ArrayList<>();
+        for (CustomerExample ce : list) {
+            resultList.add(HibernateDtoMapper.getCustomerExampleDto(ce));
+        }
         session.getTransaction().commit();
         session.close();
-        return list;
+        return resultList;
     }
 
-    public CustomerExample getCustomerExampleById(int id){
+    public CustomerExampleDto getCustomerExampleById(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        CustomerExample ue = session.get(CustomerExample.class,id);
+        CustomerExample ce = session.get(CustomerExample.class, id);
         session.getTransaction().commit();
         session.close();
-        return ue;
+        return HibernateDtoMapper.getCustomerExampleDto(ce);
     }
 }

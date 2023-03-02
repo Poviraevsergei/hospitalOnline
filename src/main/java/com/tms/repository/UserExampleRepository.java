@@ -1,7 +1,7 @@
 package com.tms.repository;
 
-import com.tms.domain.Consultation;
-import com.tms.domain.UserExample;
+import com.tms.domain.*;
+import com.tms.mappers.HibernateDtoMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,22 +19,26 @@ public class UserExampleRepository {
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public ArrayList<UserExample> getAllUserEx(){
+    public ArrayList<UserExampleDto> getAllUserEx() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Query query = session.createQuery("from UserExample ");
         ArrayList<UserExample> list = (ArrayList<UserExample>) query.getResultList();
+        ArrayList<UserExampleDto> resultList = new ArrayList<>();
+        for (UserExample ue : list) {
+            resultList.add(HibernateDtoMapper.getUserExampleDto(ue));
+        }
         session.getTransaction().commit();
         session.close();
-        return list;
+        return resultList;
     }
 
-    public UserExample getUserExampleById(int id){
+    public UserExampleDto getUserExampleById(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        UserExample ue = session.get(UserExample.class,id);
+        UserExample ue = session.get(UserExample.class, id);
         session.getTransaction().commit();
         session.close();
-        return ue;
+        return HibernateDtoMapper.getUserExampleDto(ue);
     }
 }

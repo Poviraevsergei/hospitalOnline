@@ -1,6 +1,7 @@
 package com.tms.controller;
 
 import com.tms.domain.CustomerExample;
+import com.tms.domain.CustomerExampleDto;
 import com.tms.repository.CustomerExampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +26,12 @@ public class CustomerExampleController {
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<CustomerExample>> getAllCustomersEx() {
+    public ResponseEntity<ArrayList<CustomerExampleDto>> getAllCustomersEx() {
         return new ResponseEntity<>(customerExampleRepository.getAllCustomerEx(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerExample> getCustomerById(@PathVariable int id) {
-        CustomerExample customer = customerExampleRepository.getCustomerExampleById(id);
-        return new ResponseEntity<>(customer, HttpStatus.OK);
+    public ResponseEntity<CustomerExampleDto> getCustomerById(@PathVariable int id) {
+        return new ResponseEntity<>(customerExampleRepository.getCustomerExampleById(id), HttpStatus.OK);
     }
 }

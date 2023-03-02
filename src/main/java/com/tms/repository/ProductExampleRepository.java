@@ -1,6 +1,7 @@
 package com.tms.repository;
 
-import com.tms.domain.ProductExample;
+import com.tms.domain.*;
+import com.tms.mappers.HibernateDtoMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -18,22 +19,26 @@ public class ProductExampleRepository {
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public ArrayList<ProductExample> getAllProductEx(){
+    public ArrayList<ProductExampleDto> getAllProductEx() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
         Query query = session.createQuery("from ProductExample ");
         ArrayList<ProductExample> list = (ArrayList<ProductExample>) query.getResultList();
+        ArrayList<ProductExampleDto> resultList = new ArrayList<>();
+        for (ProductExample pe : list) {
+            resultList.add(HibernateDtoMapper.getProductExampleDto(pe));
+        }
         session.getTransaction().commit();
         session.close();
-        return list;
+        return resultList;
     }
 
-    public ProductExample getProductExampleById(int id){
+    public ProductExampleDto getProductExampleById(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        ProductExample ue = session.get(ProductExample.class,id);
+        ProductExample pe = session.get(ProductExample.class, id);
         session.getTransaction().commit();
         session.close();
-        return ue;
+        return HibernateDtoMapper.getProductExampleDto(pe);
     }
 }

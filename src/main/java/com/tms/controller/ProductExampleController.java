@@ -1,6 +1,7 @@
 package com.tms.controller;
 
 import com.tms.domain.ProductExample;
+import com.tms.domain.ProductExampleDto;
 import com.tms.repository.ProductExampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,13 +26,12 @@ public class ProductExampleController {
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<ProductExample>> getAllProductsEx() {
+    public ResponseEntity<ArrayList<ProductExampleDto>> getAllProductsEx() {
         return new ResponseEntity<>(productExampleRepository.getAllProductEx(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductExample> getProductById(@PathVariable int id) {
-        ProductExample product = productExampleRepository.getProductExampleById(id);
-        return new ResponseEntity<>(product, HttpStatus.OK);
+    public ResponseEntity<ProductExampleDto> getProductById(@PathVariable int id) {
+        return new ResponseEntity<>(productExampleRepository.getProductExampleById(id), HttpStatus.OK);
     }
 }

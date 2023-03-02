@@ -1,7 +1,6 @@
 package com.tms.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,12 +26,11 @@ public class CustomerExample {
     @OneToOne(mappedBy = "customer")
     private UserExample userExample;
 
-    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "l_product_customer",
-            joinColumns = { @JoinColumn(name = "customer_id") },
-            inverseJoinColumns = { @JoinColumn(name = "product_id") }
+            joinColumns = {@JoinColumn(name = "customer_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")}
     )
     Set<ProductExample> products;
 }
