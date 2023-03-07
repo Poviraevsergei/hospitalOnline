@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 @RestController
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -37,6 +38,23 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @GetMapping("/age/{age}")
+    public ResponseEntity<User> getUserByAge(@PathVariable int age) {
+        return new ResponseEntity<>(userService.getUserByAge(age), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable int id) {
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<HttpStatus> saveUserTransactional(@RequestBody User user){
+        userService.saveUserTransactional(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -45,8 +63,7 @@ public class UserController {
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = userService.createUser(user);
-        return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(userService.createUser(user) != null ? HttpStatus.CREATED : HttpStatus.CONFLICT);
     }
 
     @PutMapping
@@ -57,27 +74,13 @@ public class UserController {
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        int countChangedRows = userService.updateUserById(user);
-        return new ResponseEntity<>(countChangedRows != 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
+        return new ResponseEntity<>(userService.updateUserById(user) != null ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable int id) {
-        return new ResponseEntity<>(userService.deleteUserById(id) > 0 ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
-    }
-
-    @Operation(description = "Ищет пользователя в бд по id", summary = "Ишем пользователя")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Всё ок, Юзер найден!"),
-            @ApiResponse(responseCode = "409", description = "Мы не нашли, всё плохо :(")
-    })
-    @GetMapping("/{id}")
-    @Tag(name = "byID", description = "ищём по id")
-    public ResponseEntity<User> getUserById(
-            @Parameter(description = "Это id пользователя") @PathVariable int id,
-            @Parameter(description = "А это для массовки", required = true) String name) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+    @DeleteMapping
+    public ResponseEntity<HttpStatus> delete(@RequestBody User user) {
+        userService.deleteUser(user);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
