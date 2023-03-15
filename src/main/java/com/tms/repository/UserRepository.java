@@ -10,4 +10,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT u FROM User u WHERE u.age=:age")
     User findUserByAge(int age);
+
+    User findUserByLogin(String login);
+
+    @Query(nativeQuery = true, value = "SELECT role FROM roles WHERE user_id=:id")
+    String getRole(int id);
 }
