@@ -75,7 +75,6 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(userService.updateUserById(user) != null ? HttpStatus.NO_CONTENT : HttpStatus.CONFLICT);
-
     }
 
     @DeleteMapping

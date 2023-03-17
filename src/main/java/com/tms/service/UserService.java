@@ -36,7 +36,6 @@ public class UserService {
         return (ArrayList<User>) userRepository.findAll();
     }
 
-
     public User createUser(User user) {
         return userRepository.save(user);
     }

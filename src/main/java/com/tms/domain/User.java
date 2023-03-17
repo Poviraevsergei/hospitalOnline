@@ -1,5 +1,6 @@
 package com.tms.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tms.annotations.IsAdult;
 import lombok.Data;
 
@@ -32,6 +33,7 @@ public class User {
     @Column(name = "user_login")
     private String login;
 
+    @JsonIgnore
     @Column(name = "user_password")
     private String password;
 }

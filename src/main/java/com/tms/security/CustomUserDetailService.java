@@ -1,4 +1,4 @@
-package com.tms.service;
+package com.tms.security;
 
 import com.tms.domain.User;
 import com.tms.repository.UserRepository;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-
 
     UserRepository userRepository;
 
@@ -25,6 +24,7 @@ public class CustomUserDetailService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(s);
         }
+
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getLogin())
                 .password(user.getPassword())
