@@ -1,6 +1,8 @@
 package com.tms.security;
 
+import com.tms.domain.request.JwtAuthRequest;
 import com.tms.domain.request.RegistrationUser;
+import com.tms.domain.response.JwtResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +25,14 @@ public class SecureController {
     @PostMapping("/registration")
     public ResponseEntity<HttpResponse> registrationUser(@RequestBody RegistrationUser registrationUser) {
         return new ResponseEntity<>(securityService.registration(registrationUser) ? HttpStatus.CREATED : HttpStatus.CONFLICT);
+    }
+
+    @PostMapping("/auth")
+    public ResponseEntity<JwtResponse> auth(@RequestBody JwtAuthRequest jwtAuthRequest) {
+        String result = securityService.getToken(jwtAuthRequest);
+        if (!result.isBlank()) {
+            return new ResponseEntity<>(new JwtResponse(result), HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

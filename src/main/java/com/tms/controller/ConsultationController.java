@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class ConsultationController {
     }
 
     @PostMapping
-    @ApiIgnore(value = "Просто так")
     public ResponseEntity<HttpStatus> createConsultation(@RequestBody @Valid Consultation consultation, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
@@ -64,7 +62,6 @@ public class ConsultationController {
         }
         consultationService.updateConsultationById(consultation);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
     }
 
     @DeleteMapping

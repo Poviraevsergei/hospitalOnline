@@ -2,11 +2,7 @@ package com.tms.controller;
 
 import com.tms.domain.User;
 import com.tms.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.function.Predicate;
 
 @RestController
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/test")
-    public ResponseEntity<HttpStatus> saveUserTransactional(@RequestBody User user){
+    public ResponseEntity<HttpStatus> saveUserTransactional(@RequestBody User user) {
         userService.saveUserTransactional(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -67,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUserById(@RequestBody @Valid User user, BindingResult bindingResult ) {
+    public ResponseEntity<HttpStatus> updateUserById(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 log.warn(o.getDefaultMessage());

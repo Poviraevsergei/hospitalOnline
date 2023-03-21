@@ -1,19 +1,13 @@
 package com.tms.service;
 
 import com.tms.domain.User;
-import com.tms.exception.UserNotFoundException;
-import com.tms.mappers.UserMapper;
 import com.tms.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.sql.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -44,8 +38,16 @@ public class UserService {
         return userRepository.saveAndFlush(user);
     }
 
+    public Optional<User> getUserByLogin(String login) {
+        return userRepository.findUserByLogin(login);
+    }
+
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    public String getRole(Integer id){
+        return userRepository.getRole(id);
     }
 
     @Transactional(rollbackFor = Exception.class)
