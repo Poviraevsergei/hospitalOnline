@@ -1,16 +1,10 @@
 package com.tms.service;
 
 import com.tms.domain.Consultation;
-import com.tms.domain.User;
-import com.tms.mappers.UserMapper;
 import com.tms.repository.ConsultationRepository;
-import org.aspectj.weaver.ArrayAnnotationValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 
 @Service
@@ -24,22 +18,22 @@ public class ConsultationService {
     }
 
     public Consultation getConsultationById(int id) {
-        return consultationRepository.getConsultationById(id);
+        return consultationRepository.findById(id).orElse(new Consultation());
     }
 
     public ArrayList<Consultation> getAllConsultations() {
-        return consultationRepository.getAllConsultations();
+        return (ArrayList<Consultation>) consultationRepository.findAll();
     }
 
     public void createConsultation(Consultation consultation) {
-        consultationRepository.createConsultation(consultation);
+        consultationRepository.save(consultation);
     }
 
     public void updateConsultationById(Consultation consultation) {
-        consultationRepository.updateConsultation(consultation);
+        consultationRepository.saveAndFlush(consultation);
     }
 
     public void deleteConsultation(Consultation consultation) {
-        consultationRepository.deleteConsultation(consultation);
+        consultationRepository.delete(consultation);
     }
 }

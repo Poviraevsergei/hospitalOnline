@@ -13,16 +13,16 @@ public class Consultation {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "consultation_seq")
     @SequenceGenerator(name = "consultation_seq", sequenceName = "consultation_id_seq", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Column(name = "time")
     private Timestamp consultationTime;
 
     @Column(name = "doctor_id")
-    private int doctorId;
+    private Integer doctorId;
 
     @Column(name = "patient_id")
-    private int patientId;
+    private Integer patientId;
 
     @Column(name = "description")
     private String description;

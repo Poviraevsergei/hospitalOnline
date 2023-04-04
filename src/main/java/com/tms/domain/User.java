@@ -15,7 +15,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @SequenceGenerator(name = "user_seq", sequenceName = "user_id_seq", allocationSize = 1)
-    private int id;
+    private Integer id;
 
     @Size(min = 5, max = 8)
     @Column(name = "first_name")
@@ -28,7 +28,7 @@ public class User {
     @Positive
     @IsAdult
     @Column(name = "age")
-    private int age;
+    private Integer age;
 
     @Column(name = "user_login")
     private String login;

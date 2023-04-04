@@ -47,7 +47,7 @@ public class SecurityService {
 
             User savedUser = userRepository.save(user);
             System.out.println();
-            //     userRepository.addUserRole(savedUser.getId()); //TODO: CHENGE
+            //     userRepository.addUserRole(savedUser.getId()); //TODO: CHANGE
 
             if (savedUser != null) {
                 return true;
